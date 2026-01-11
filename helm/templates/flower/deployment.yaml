@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-flower
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}-flower
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}-flower
+    spec:
+      containers:
+        - name: flower
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["celery"]
+          args:
+            - "-A"
+            - "src.celery"
+            - "flower"
+            - "--port={{ .Values.flower.port }}"
+            - "--events"
+          env:
+            - name: CELERY_BROKER_URL
+              value: "redis://{{ .Values.appName }}-redis:{{ .Values.redis.port }}/0"
+            - name: CELERY_RESULT_BACKEND
+              value: "redis://{{ .Values.appName }}-redis:{{ .Values.redis.port }}/1"

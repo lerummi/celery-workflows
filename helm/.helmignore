@@ -1,0 +1,38 @@
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python virtual environments
+venv/
+.env/
+.env.*
+
+# Docker / Build artifacts
+*.dockerfile
+Dockerfile*
+*.tgz
+*.log
+*.tmp
+*.swp
+*.bak
+
+# IDE / Editor files
+*.idea/
+*.vscode/
+*.sublime-project
+*.sublime-workspace
+*.DS_Store
+*.egg-info/
+*.pytest_cache/
+*.mypy_cache/
+
+# Node / frontend stuff if any
+node_modules/
+dist/
+build/
+
+# Helm internal files
+charts/
+helm.lock

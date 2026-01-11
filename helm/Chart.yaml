@@ -1,0 +1,6 @@
+apiVersion: v2
+name: celery-workflows
+description: Helm chart for Celery workers, Redis, and Flower
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

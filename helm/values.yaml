@@ -1,0 +1,17 @@
+namespace: celery
+
+appName: celery-workflows
+image:
+  repository: celery-workflows
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+redis:
+  image: redis:7
+  port: 6379
+
+flower:
+  port: 5555
+  nodePort: 30555  # optional NodePort
