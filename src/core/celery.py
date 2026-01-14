@@ -1,7 +1,6 @@
-import os
 from celery import Celery
 
-from config import settings
+from src.core.config import settings
 
 
 celery = Celery(

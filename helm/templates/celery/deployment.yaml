@@ -20,7 +20,7 @@ spec:
           command: ["celery"]
           args:
             - "-A"
-            - "src.celery"
+            - "src.core.celery"
             - "worker"
             - "--loglevel=info"
             - "--events"

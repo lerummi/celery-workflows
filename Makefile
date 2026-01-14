@@ -39,6 +39,6 @@ helm/uninstall:  ## Helm uninstall
 	helm uninstall celery-workflows -n $(APP_NAMESPACE)
 
 ##@ Kubernetes
-k8s/get-all:
+k8s/get-all:  ## Alle Komponenten in kubernetes
 	kubectl get all -n $(APP_NAMESPACE)
 

@@ -25,3 +25,8 @@ spec:
             - "0.0.0.0"
             - "--port"
             - "8000"
+          env:
+            - name: CELERY_BROKER_URL
+              value: "redis://{{ .Values.appName }}-redis:{{ .Values.redis.port }}/0"
+            - name: CELERY_RESULT_BACKEND
+              value: "redis://{{ .Values.appName }}-redis:{{ .Values.redis.port }}/1"
