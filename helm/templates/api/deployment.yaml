@@ -20,13 +20,8 @@ spec:
           workingDir: /app
           command: ["uvicorn"]
           args:
-            - "src.api:app"
+            - "src.api.main:app"
             - "--host"
             - "0.0.0.0"
             - "--port"
             - "8000"
-          env:
-            - name: CELERY_BROKER_URL
-              value: "redis://celery-workflows-redis:{{ .Values.redis.port }}/0"
-            - name: CELERY_RESULT_BACKEND
-              value: "redis://celery-workflows-redis:{{ .Values.redis.port }}/1"
