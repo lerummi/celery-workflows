@@ -26,14 +26,18 @@ docker/build:  ## Baue docker images
 	docker compose build
 
 ##@ Helm
+helm/dep-update:  ## Update Helm dependencies
+	helm dependency update ./helm
+
 helm/package:  ## Helm Chart packagen
-	helm package helm/ -d helm/charts
+	rm -f helm/charts/$(APP_NAME)-0.1.0.tgz
+	@helm package helm/ -d helm/charts
 
 helm/upgrade:  ## Helm Upgrade
 	helm upgrade --install $(APP_NAME) \
 	     helm/charts/$(APP_NAME)-0.1.0.tgz \
 		 -n $(APP_NAMESPACE) \
-		 --create-namespace
+  		 --create-namespace
 
 helm/uninstall:  ## Helm uninstall
 	helm uninstall celery-workflows -n $(APP_NAMESPACE)

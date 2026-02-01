@@ -1,6 +1,5 @@
 namespace: celery
 
-appName: celery-workflows
 image:
   repository: celery-workflows
   tag: latest
@@ -14,4 +13,29 @@ redis:
 
 flower:
   port: 5555
-  nodePort: 30555  # optional NodePort
+  nodePort: 30555
+
+seaweedfs:
+  enabled: true
+
+  filer:
+    port: 8899
+    nodePort: 30099
+
+  master:
+    replicas: 1
+
+  volume:
+    replicas: 1
+
+  s3:
+    enabled: true
+    enabledAuth: true
+    existingConfigSecret: seaweedfs
+    service:
+      type: ClusterIP
+
+  # Persistenz activated
+  volumeClaimTemplates:
+    enabled: true
+    storage: 5Gi

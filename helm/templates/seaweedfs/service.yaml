@@ -1,0 +1,16 @@
+{{- if .Values.seaweedfs.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-seaweedfs-filer-local
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: seaweedfs
+    app.kubernetes.io/component: filer
+  ports:
+  - name: http
+    port: {{ .Values.seaweedfs.filer.port }}
+    targetPort: {{ .Values.seaweedfs.filer.port }}
+    nodePort: {{ .Values.seaweedfs.filer.nodePort }}
+{{- end }}

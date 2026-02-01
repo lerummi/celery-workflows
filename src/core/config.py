@@ -12,4 +12,8 @@ class CelerySettings(BaseSettings):
         alias="CELERY_RESULT_BACKEND"
     )
 
+    filer_url: str = Field(
+        alias="SEAWEEDFS_FILER_URL"
+    )
+
 settings = CelerySettings()

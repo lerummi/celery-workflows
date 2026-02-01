@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-redis
+  name: {{ .Release.Name }}-redis
   namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.appName }}-redis
+      app: {{ .Release.Name }}-redis
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}-redis
+        app: {{ .Release.Name }}-redis
     spec:
       containers:
         - name: redis

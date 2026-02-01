@@ -12,7 +12,6 @@ venv/
 # Docker / Build artifacts
 *.dockerfile
 Dockerfile*
-*.tgz
 *.log
 *.tmp
 *.swp
@@ -34,5 +33,4 @@ dist/
 build/
 
 # Helm internal files
-charts/
 helm.lock

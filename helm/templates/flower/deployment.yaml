@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-flower
+  name: {{ .Release.Name }}-flower
   namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.appName }}-flower
+      app: {{ .Release.Name }}-flower
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}-flower
+        app: {{ .Release.Name }}-flower
     spec:
       containers:
         - name: flower
@@ -26,6 +26,8 @@ spec:
             - "--events"
           env:
             - name: CELERY_BROKER_URL
-              value: "redis://{{ .Values.appName }}-redis:{{ .Values.redis.port }}/0"
+              value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.port }}/0"
             - name: CELERY_RESULT_BACKEND
-              value: "redis://{{ .Values.appName }}-redis:{{ .Values.redis.port }}/1"
+              value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.port }}/1"
+            - name: SEAWEEDFS_FILER_URL
+              value: "http://seaweedfs-filer:{{ .Values.seaweedfs.filer.port }}"
