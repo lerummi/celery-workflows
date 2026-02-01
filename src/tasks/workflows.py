@@ -2,7 +2,8 @@ import time
 import uuid
 import json
 import logging
-import requests
+import boto3
+from botocore.exceptions import ClientError
 
 from src.core.celery import celery
 from src.core.config import settings
@@ -24,18 +25,34 @@ def multiply(x, y):
 
 @celery.task
 def save_to_seaweed(result: str, filename: str):
-    path = f"/results/{filename}"
-    url = f"{settings.filer_url}{path}"
+    bucket = "results"
 
-    data = json.dumps({"result": result}).encode("utf-8")
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=settings.s3_url,
+        aws_access_key_id="accessKey",
+        aws_secret_access_key="secretKey",
+        region_name="us-east-1"
+    )
 
-    files = {"file": (filename, data, "application/json")}
+    # Create bucket if it doesn't exist
+    try:
+        s3.head_bucket(Bucket=bucket)
+    except ClientError:
+        s3.create_bucket(Bucket=bucket)
+        logging.info(f"Created bucket: {bucket}")
 
-    response = requests.post(url, files=files)
-    response.raise_for_status()
+    # Upload file
+    data = json.dumps({"result": result})
+    s3.put_object(
+        Bucket=bucket,
+        Key=filename,
+        Body=data,
+        ContentType="application/json"
+    )
 
-    logging.info(f"Uploaded to {path}")
-    return f"Uploaded to {path}"
+    logging.info(f"Uploaded to s3://{bucket}/{filename}")
+    return f"Uploaded to s3://{bucket}/{filename}"
 
 @celery.task
 def workflow_example(a, b):

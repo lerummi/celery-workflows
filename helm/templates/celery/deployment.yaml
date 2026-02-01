@@ -29,5 +29,5 @@ spec:
               value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.port }}/0"
             - name: CELERY_RESULT_BACKEND
               value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.port }}/1"
-            - name: SEAWEEDFS_FILER_URL
-              value: "http://seaweedfs-filer:{{ .Values.seaweedfs.filer.port }}"
+            - name: SEAWEEDFS_S3_URL
+              value: "http://seaweedfs-s3:{{ .Values.seaweedfs.s3.port }}"

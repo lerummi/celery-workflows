@@ -19,8 +19,9 @@ seaweedfs:
   enabled: true
 
   filer:
+    enabled: true
     port: 8899
-    nodePort: 30099
+    nodePort: 30899
 
   master:
     replicas: 1
@@ -32,6 +33,7 @@ seaweedfs:
     enabled: true
     enabledAuth: true
     existingConfigSecret: seaweedfs
+    port: 8333
     service:
       type: ClusterIP
 

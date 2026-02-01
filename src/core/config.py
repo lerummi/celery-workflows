@@ -12,8 +12,8 @@ class CelerySettings(BaseSettings):
         alias="CELERY_RESULT_BACKEND"
     )
 
-    filer_url: str = Field(
-        alias="SEAWEEDFS_FILER_URL"
+    s3_url: str = Field(
+        alias="SEAWEEDFS_S3_URL"
     )
 
 settings = CelerySettings()
