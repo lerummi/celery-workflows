@@ -10,6 +10,11 @@ replicaCount: 2
 redis:
   image: redis:7
   port: 6379
+  storage: 2Gi
+
+api:
+  port: 8000
+  nodePort: 30080
 
 flower:
   port: 5555

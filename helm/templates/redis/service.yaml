@@ -4,6 +4,7 @@ metadata:
   name: {{ .Release.Name }}-redis
   namespace: {{ .Values.namespace }}
 spec:
+  clusterIP: None
   selector:
     app: {{ .Release.Name }}-redis
   ports:

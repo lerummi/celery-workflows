@@ -9,6 +9,6 @@ spec:
     app: {{ .Release.Name }}-api
   ports:
     - name: http
-      port: 8000
-      targetPort: 8000
-      nodePort: 30080 
+      port: {{ .Values.api.port }}
+      targetPort: {{ .Values.api.port }}
+      nodePort: {{ .Values.api.nodePort }}

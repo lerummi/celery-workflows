@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-redis
   namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
+  serviceName: {{ .Release.Name }}-redis
   selector:
     matchLabels:
       app: {{ .Release.Name }}-redis
@@ -16,6 +17,9 @@ spec:
       containers:
         - name: redis
           image: {{ .Values.redis.image }}
+          args:
+            - "--appendonly"
+            - "yes"
           resources:
             requests:
               cpu: 100m
@@ -25,3 +29,14 @@ spec:
               memory: 256Mi
           ports:
             - containerPort: {{ .Values.redis.port }}
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.redis.storage }}

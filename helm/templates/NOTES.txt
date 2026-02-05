@@ -1,0 +1,29 @@
+celery-workflows deployed successfully.
+
+========================================
+  Services accessible via NodePort
+========================================
+
+  API (FastAPI/uvicorn)
+    Swagger UI:   http://localhost:{{ .Values.api.nodePort }}/docs
+    Trigger:      POST  http://localhost:{{ .Values.api.nodePort }}/workflows
+    Task status:  GET   http://localhost:{{ .Values.api.nodePort }}/workflows/<task_id>/status
+
+  Flower (Celery monitoring)
+    http://localhost:{{ .Values.flower.nodePort }}
+
+  SeaweedFS Filer (web UI)
+    http://localhost:{{ .Values.seaweedfs.filer.nodePort }}
+
+========================================
+  Cluster-internal services
+========================================
+
+  Redis
+    redis://{{ .Release.Name }}-redis:{{ .Values.redis.port }}
+
+  SeaweedFS S3
+    http://seaweedfs-s3:{{ .Values.seaweedfs.s3.port }}
+
+  SeaweedFS Filer
+    http://seaweedfs-filer:{{ .Values.seaweedfs.filer.port }}
