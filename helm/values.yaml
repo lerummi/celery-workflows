@@ -18,16 +18,48 @@ flower:
 seaweedfs:
   enabled: true
 
+  master:
+    replicas: 1
+    data:
+      type: "persistentVolumeClaim"
+      size: "5Gi"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  volume:
+    replicas: 1
+    dataDirs:
+      - name: data
+        type: "persistentVolumeClaim"
+        size: "5Gi"
+        maxVolumes: 0
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
   filer:
     enabled: true
     port: 8899
     nodePort: 30899
-
-  master:
-    replicas: 1
-
-  volume:
-    replicas: 1
+    data:
+      type: "persistentVolumeClaim"
+      size: "5Gi"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
 
   s3:
     enabled: true
@@ -36,8 +68,10 @@ seaweedfs:
     port: 8333
     service:
       type: ClusterIP
-
-  # Persistenz activated
-  volumeClaimTemplates:
-    enabled: true
-    storage: 5Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi

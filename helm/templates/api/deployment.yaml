@@ -25,6 +25,13 @@ spec:
             - "0.0.0.0"
             - "--port"
             - "8000"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
           env:
             - name: CELERY_BROKER_URL
               value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.port }}/0"
