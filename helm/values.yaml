@@ -1,70 +1,53 @@
+# Base Configuration (shared across all environments)
+# Environment-specific overrides:
+# - Local: values/local.yaml
+# - Production: values/prod.yaml
+
 namespace: celery
 
 image:
   repository: celery-workflows
-  tag: latest
-  pullPolicy: IfNotPresent
+  # tag and pullPolicy are set in environment-specific files
 
-replicaCount: 2
+# replicaCount is set in environment-specific files
 
 redis:
   image: redis:7
   port: 6379
-  storage: 2Gi
+  # storage is set in environment-specific files
 
 api:
   port: 8000
-  nodePort: 30080
+  # nodePort and resources are set in environment-specific files
 
 flower:
   port: 5555
-  nodePort: 30555
+  # nodePort and resources are set in environment-specific files
+
+# worker resources are set in environment-specific files
+worker: {}
 
 seaweedfs:
   enabled: true
 
   master:
-    replicas: 1
+    # replicas, data (size, storageClass), and resources are set in environment-specific files
     data:
       type: "persistentVolumeClaim"
-      size: "5Gi"
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
 
   volume:
-    replicas: 1
+    # replicas, dataDirs, and resources are set in environment-specific files
     dataDirs:
       - name: data
         type: "persistentVolumeClaim"
-        size: "5Gi"
         maxVolumes: 0
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 512Mi
 
   filer:
     enabled: true
     port: 8899
-    nodePort: 30899
+    # nodePort, data (size, storageClass), and resources are set in environment-specific files
     data:
       type: "persistentVolumeClaim"
-      size: "5Gi"
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
 
   s3:
     enabled: true
@@ -73,6 +56,18 @@ seaweedfs:
     port: 8333
     service:
       type: ClusterIP
+    # resources are set in environment-specific files
+
+longhorn:
+  # enabled is set in environment-specific files
+  defaultSettings:
+    defaultDataPath: /var/lib/longhorn
+  csi:
+    kubeletRootDir: /var/lib/kubelet
+  persistence:
+    defaultClass: true
+    # defaultClassReplicaCount is set in environment-specific files
+  longhornManager:
     resources:
       requests:
         cpu: 100m
@@ -80,3 +75,26 @@ seaweedfs:
       limits:
         cpu: 500m
         memory: 256Mi
+  longhornDriver:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+velero:
+  # enabled is set in environment-specific files
+  s3:
+    bucket: velero-backups
+    accessKey: accessKey
+    secretKey: secretKey
+    region: us-east-1
+  bsl:
+    name: seaweedfs-bsl
+  schedule:
+    # enabled is set in environment-specific files
+    name: celery-daily-backup
+    cron: "0 2 * * *"
+    ttl: 720h

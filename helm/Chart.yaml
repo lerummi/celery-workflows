@@ -9,3 +9,7 @@ dependencies:
   - name: seaweedfs
     version: 4.0.407
     repository: https://seaweedfs.github.io/seaweedfs/helm
+  - name: longhorn
+    version: 1.7.2
+    repository: https://charts.longhorn.io
+    condition: longhorn.enabled

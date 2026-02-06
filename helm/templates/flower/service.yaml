@@ -8,6 +8,7 @@ spec:
   selector:
     app: {{ .Release.Name }}-flower
   ports:
-    - port: {{ .Values.flower.port }}
+    - name: http
+      port: {{ .Values.flower.port }}
       targetPort: {{ .Values.flower.port }}
       nodePort: {{ .Values.flower.nodePort }}

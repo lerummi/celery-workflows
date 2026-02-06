@@ -1,0 +1,26 @@
+{{- if .Values.velero.enabled }}
+{{- if .Values.velero.schedule.enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ .Values.velero.schedule.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-velero
+spec:
+  schedule: {{ .Values.velero.schedule.cron | quote }}
+  template:
+    metadata:
+      labels:
+        velero.io/backup-type: scheduled
+    spec:
+      includedNamespaces:
+        - {{ .Values.namespace }}
+      storageLocation: {{ .Values.velero.bsl.name }}
+      snapshotVolumes: true
+      ttl: {{ .Values.velero.schedule.ttl }}
+      excludedResources:
+        - backupstoragelocations
+        - schedules
+{{- end }}
+{{- end }}

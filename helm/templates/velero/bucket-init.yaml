@@ -1,0 +1,61 @@
+{{- if .Values.velero.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-velero-bucket-init
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-velero
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-velero-bucket-init
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: bucket-init
+          image: amazon/aws-cli:latest
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .Values.velero.s3.accessKey | quote }}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .Values.velero.s3.secretKey | quote }}
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.velero.s3.region | quote }}
+            - name: S3_ENDPOINT
+              value: http://seaweedfs-s3:{{ .Values.seaweedfs.s3.port }}
+            - name: BUCKET_NAME
+              value: {{ .Values.velero.s3.bucket | quote }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              echo "Waiting for SeaweedFS S3 at ${S3_ENDPOINT}..."
+              for i in $(seq 1 30); do
+                if curl -s -o /dev/null "${S3_ENDPOINT}" 2>/dev/null; then
+                  echo "SeaweedFS S3 is available."
+                  break
+                fi
+                echo "Attempt ${i}/30 — retrying in 5s..."
+                sleep 5
+              done
+
+              echo "Creating bucket ${BUCKET_NAME}..."
+              aws s3 mb "s3://${BUCKET_NAME}" --endpoint-url "${S3_ENDPOINT}" || true
+
+              echo "Verifying bucket..."
+              aws s3 ls "s3://${BUCKET_NAME}" --endpoint-url "${S3_ENDPOINT}" && echo "Bucket verified." || echo "WARNING: bucket verification failed"
+{{- end }}

@@ -1,0 +1,102 @@
+# Production Environment Overrides
+# Use with: helm upgrade --install celery-workflows -f values.yaml -f values/prod.yaml
+
+image:
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 3
+
+redis:
+  storage: 10Gi
+
+api:
+  nodePort: 30080
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+flower:
+  nodePort: 30555
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+worker:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+seaweedfs:
+  master:
+    replicas: 2
+    data:
+      size: "20Gi"
+      storageClass: "longhorn"
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+
+  volume:
+    replicas: 3
+    dataDirs:
+      - name: data
+        type: "persistentVolumeClaim"
+        size: "50Gi"
+        maxVolumes: 0
+        storageClass: "longhorn"
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+  filer:
+    nodePort: 30899
+    data:
+      size: "20Gi"
+      storageClass: "longhorn"
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+
+  s3:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+
+longhorn:
+  enabled: true
+  persistence:
+    defaultClassReplicaCount: 3
+
+velero:
+  enabled: true
+  schedule:
+    enabled: true

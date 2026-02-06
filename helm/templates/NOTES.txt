@@ -27,3 +27,21 @@ celery-workflows deployed successfully.
 
   SeaweedFS Filer
     http://seaweedfs-filer:{{ .Values.seaweedfs.filer.port }}
+{{- if .Values.velero.enabled }}
+
+========================================
+  Velero Backup
+========================================
+
+  BSL:        {{ .Values.velero.bsl.name }} -> seaweedfs-s3:{{ .Values.seaweedfs.s3.port }}/{{ .Values.velero.s3.bucket }}
+  Schedule:   {{ if .Values.velero.schedule.enabled }}ENABLED ({{ .Values.velero.schedule.cron }}){{ else }}DISABLED{{ end }}
+
+  Manuelles Backup:
+    velero backup create manual-$(date +%s) --include-namespaces {{ .Values.namespace }} -n {{ .Values.namespace }}
+
+  Backups auflisten:
+    velero backup get -n {{ .Values.namespace }}
+
+  Restore aus Backup:
+    velero restore create --from-backup <backup-name> -n {{ .Values.namespace }}
+{{- end }}

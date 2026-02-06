@@ -1,0 +1,21 @@
+{{- if .Values.velero.enabled }}
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: {{ .Values.velero.bsl.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-velero
+spec:
+  default: true
+  provider: aws
+  credential:
+    name: {{ .Release.Name }}-velero-credentials
+    key: cloud
+  config:
+    region: {{ .Values.velero.s3.region }}
+    s3Url: http://seaweedfs-s3:{{ .Values.seaweedfs.s3.port }}
+    s3ForcePathStyle: "true"
+  objectStorage:
+    bucket: {{ .Values.velero.s3.bucket }}
+{{- end }}

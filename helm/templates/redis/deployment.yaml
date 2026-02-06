@@ -37,6 +37,11 @@ spec:
         name: redis-data
       spec:
         accessModes: ["ReadWriteOnce"]
+{{- if .Values.longhorn.enabled }}
+        storageClassName: longhorn
+{{- else }}
+        storageClassName: csi-hostpath-sc
+{{- end }}
         resources:
           requests:
             storage: {{ .Values.redis.storage }}

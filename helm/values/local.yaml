@@ -1,0 +1,96 @@
+# Local Development Environment Overrides
+# Use with: helm upgrade --install celery-workflows -f values.yaml -f values/local.yaml
+
+image:
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+redis:
+  storage: 2Gi
+
+api:
+  nodePort: 30080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+flower:
+  nodePort: 30555
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+worker:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+seaweedfs:
+  master:
+    data:
+      size: "5Gi"
+      storageClass: "csi-hostpath-sc"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  volume:
+    dataDirs:
+      - name: data
+        type: "persistentVolumeClaim"
+        size: "5Gi"
+        maxVolumes: 0
+        storageClass: "csi-hostpath-sc"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  filer:
+    nodePort: 30899
+    data:
+      size: "5Gi"
+      storageClass: "csi-hostpath-sc"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  s3:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+longhorn:
+  enabled: false
+
+velero:
+  enabled: false
